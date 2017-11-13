@@ -34,7 +34,7 @@ The problem I'm currently running into is that this doesn't quite work. My assum
 
 I think I got it. I've just been confusing myself here. When I give it Durham's latitude and 0.0 longitude, I get a sunrise time of ~6:35am. Durham's sunrise is at 6:51am. If I want to see this number, I need to ignore the major time zone difference (as it is doing), and only adjust to where Durham is in the time zone. In our case, it's 16 minutes from the center, which explains this difference. However, the point of this project wasn't to get that exact number, it was to have the comparison points of sunrise and sunset and work time hours without the exact numbers. The UTC time for Durham, NC at sunrise is 11:51.
 
-
+The sunrise/sunset calculator is now working. I just need to write it into a function and it should be good to go.
 
 
 
