@@ -4,10 +4,6 @@ import requests, json
 # import pandas as pd
 # import seaborn as sns
 
-# Updating Time
-
-now = datetime.utcnow()
-
 # Longitudinal Time Difference
 
 def conTimeZones(longitude_shift):
@@ -45,31 +41,51 @@ durham = [35.994034, -78.898621]
 # print('\n')
 
 # Sunrise Sunset
-city = durham
-payload = {'lat':city[0], 'lng':0.0}
-r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
+# city = durham
+# payload = {'lat':city[0], 'lng':0.0}
+# r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
+#
+# print(r.json())
+# q = r.json()['results']
+# # qtime = q['sunrise']
+# # print(qtime)
+#
+# day_markers = [q['sunrise'], q['solar_noon'], q['sunset'], q['day_length']]
+# print('old day_markers: ', day_markers)
+#
+# for i in range(0,3):
+#     day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
+#     day_markers[i] = day_markers[i] + conTimeZones(city[1])
+#     day_markers[i] = datetime.time(day_markers[i])
+#
+# # print('new day_markers: ', day_markers)
+# marker_names = ['sunrise','solar_noon','sunset','day_length']
+# for i in range(0,len(day_markers)):
+#     print(marker_names[i], '\t', day_markers[i])
 
-print(r.json())
-q = r.json()['results']
-# qtime = q['sunrise']
-# print(qtime)
 
-day_markers = [q['sunrise'], q['solar_noon'], q['sunset'], q['day_length']]
-print('old day_markers: ', day_markers)
+def DayMarkers(city):
+    """
+    This function takes a city's latitude and longitude and calculates
+    the sunrise, sunset, etc. This could be a city or any XY coordinate pair.
+    """
+    payload = {'lat':city[0], 'lng':0.0}
+    r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
+    q = r.json()['results']
+    day_markers = [q['sunrise'], q['solar_noon'], q['sunset'], q['day_length']]
+    for i in range(0,3):
+        day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
+        day_markers[i] = day_markers[i] + conTimeZones(city[1])
+        day_markers[i] = datetime.time(day_markers[i])
 
-for i in range(0,3):
-    day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
-    day_markers[i] = day_markers[i] + conTimeZones(city[1])
-    day_markers[i] = datetime.time(day_markers[i])
+    return(day_markers)
 
-# print('new day_markers: ', day_markers)
+x = DayMarkers(durham)
+
 marker_names = ['sunrise','solar_noon','sunset','day_length']
-for i in range(0,len(day_markers)):
-    print(marker_names[i], '\t', day_markers[i])
-
-
-
-
+print('CITY: Durham, NC')
+for i in range(0,len(x)):
+    print(marker_names[i], '\t', x[i])
 
 
 
