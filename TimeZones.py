@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, date, time
 import requests, json
+# import numpy as np
 # import matplotlib.pyplot as plt
 # import pandas as pd
 # import seaborn as sns
@@ -60,20 +61,60 @@ def WorkMarkers(city):
         work_param[i] = datetime.time(work_param[i])
     return(work_param)
 
-day = DayMarkers(durham)
-work = WorkMarkers(durham)
+# day = DayMarkers(durham)
+# work = WorkMarkers(durham)
+#
+# marker_names = ['sunrise','solar_noon','sunset','day_length',
+#                 'work_start','work_lunch','work_end']
+#
+#
+# all_markers = day + work
+#
+# for i in range(0,len(all_markers)):
+#     if marker_names[i] == 'sunset':
+#         print(marker_names[i], '\t', '\t', all_markers[i])
+#     else:
+#         print(marker_names[i], '\t', all_markers[i])
+#
 
-marker_names = ['sunrise','solar_noon','sunset','day_length',
-                'work_start','work_lunch','work_end']
 
 
-all_markers = day + work
 
-for i in range(0,len(all_markers)):
-    if marker_names[i] == 'sunset':
-        print(marker_names[i], '\t', '\t', all_markers[i])
-    else:
-        print(marker_names[i], '\t', all_markers[i])
+
+
+import matplotlib.pyplot as plt
+
+times = ['daytime', 'nighttime']
+lengths = [10,14]
+shades = ['orange','blue']
+worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
+worklengths = [2,3,5,6,8]
+
+# plt.pie(sizes, explode=explode, labels=labels, colors=colors, radius=1.25)
+plt.pie(lengths, labels=times, colors=shades, startangle=(15*((lengths[1]-12)/2)), radius=1.25)
+# plt.pie(worklengths, labels=worktimes, startangle=(15*()), radius=1)
+
+#draw a circle at the center of pie to make it look like a donut
+centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
+fig = plt.gcf()
+fig.gca().add_artist(centre_circle)
+
+
+# Set aspect ratio to be equal so that pie is drawn as a circle.
+plt.axis('equal')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
