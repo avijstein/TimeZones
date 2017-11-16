@@ -79,26 +79,24 @@ def WorkMarkers(city):
 
 
 
-
-
-
 import matplotlib.pyplot as plt
 
 times = ['daytime', 'nighttime']
-lengths = [10,14]
+# lengths = [(sunset-sunrise), (24 - (sunset-sunrise)), sunrise, sunset]
+lengths = [(21-11.5), (24 - (21-11.5)), 11.5, 21]
 shades = ['orange','blue']
+start = (15*lengths[2]) + 90
 worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
 worklengths = [2,3,5,6,8]
 
 # plt.pie(sizes, explode=explode, labels=labels, colors=colors, radius=1.25)
-plt.pie(lengths, labels=times, colors=shades, startangle=(15*((lengths[1]-12)/2)), radius=1.25)
+plt.pie(lengths[0:2], labels=times, colors=shades, startangle=-start, counterclock=False, radius=1.25)
 # plt.pie(worklengths, labels=worktimes, startangle=(15*()), radius=1)
 
 #draw a circle at the center of pie to make it look like a donut
 centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
 fig = plt.gcf()
 fig.gca().add_artist(centre_circle)
-
 
 # Set aspect ratio to be equal so that pie is drawn as a circle.
 plt.axis('equal')
