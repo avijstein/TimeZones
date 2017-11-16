@@ -1,11 +1,18 @@
 from datetime import datetime, timedelta, date, time
 import requests, json
+import matplotlib.pyplot as plt
 # import numpy as np
-# import matplotlib.pyplot as plt
 # import pandas as pd
 # import seaborn as sns
 
 # Longitudinal Time Difference
+
+
+# sample city locations
+indianapolis = [39.768597, -86.162682, 'indianapolis']
+nyc = [40.730610, -73.935242, 'nyc']
+philly = [39.952583, -75.165222, 'philly']
+durham = [35.994034, -78.898621, 'Durham']
 
 def conTimeZones(longitude_shift):
     """
@@ -14,7 +21,6 @@ def conTimeZones(longitude_shift):
     """
     if abs(longitude_shift) / 360 >= 1:
         return('Please enter valid distance.')
-
     now = datetime.utcnow()
     shift_sec = longitude_shift*240
     if shift_sec >= 0:
@@ -22,13 +28,6 @@ def conTimeZones(longitude_shift):
     else:
         diff = timedelta(seconds = abs(shift_sec))
     return(diff)
-
-
-# sample city locations
-indianapolis = [39.768597, -86.162682]
-nyc = [40.730610, -73.935242]
-philly = [39.952583, -75.165222]
-durham = [35.994034, -78.898621]
 
 # Sunrise Sunset Markers
 def DayMarkers(city):
@@ -61,59 +60,68 @@ def WorkMarkers(city):
         work_param[i] = datetime.time(work_param[i])
     return(work_param)
 
-# day = DayMarkers(durham)
-# work = WorkMarkers(durham)
-#
-# marker_names = ['sunrise','solar_noon','sunset','day_length',
-#                 'work_start','work_lunch','work_end']
-#
-#
-# all_markers = day + work
-#
-# for i in range(0,len(all_markers)):
-#     if marker_names[i] == 'sunset':
-#         print(marker_names[i], '\t', '\t', all_markers[i])
-#     else:
-#         print(marker_names[i], '\t', all_markers[i])
-#
 
+def AllMarkers(city, display):
+    """
+    This function combines the marker functions (to consolidated later).
+    It accepts a city location and name, and boolean for display. It returns
+    all of the markers, and possibly a print out of the values.
+    """
+    day = DayMarkers(city)
+    work = WorkMarkers(city)
+    marker_names = ['sunrise','solar_noon','sunset','day_length',
+                    'work_start','work_lunch','work_end']
+    all_markers = day + work
+    if display == True:
+        print('City: ', '\t', '\t', city[2].upper())
+        for i in range(0,len(all_markers)):
+            if marker_names[i] == 'sunset':
+                print(marker_names[i], '\t', '\t', all_markers[i])
+            else:
+                print(marker_names[i], '\t', all_markers[i])
+    return(all_markers)
 
+# AllMarkers(durham, True)
 
-import matplotlib.pyplot as plt
+def tdiff(time1, time2):
+    """
+    This function turns 1 or 2 time objects into a float number of hours. It
+    calculates the difference, or the distance from UTC midnight.
+    It accepts two datetime.time objects (or a zero) and returns a float.
+    """
+    a = datetime.strptime(str(time1), '%H:%M:%S.%f')
+    if time2 == 0:
+        c = (a - datetime.combine(a, time.min)).total_seconds()/3600
+        return(c)
+    else:
+        b = datetime.strptime(str(time2), '%H:%M:%S.%f')
+        c = (b - a).total_seconds()/3600
+        return(c)
 
-times = ['daytime', 'nighttime']
-# lengths = [(sunset-sunrise), (24 - (sunset-sunrise)), sunrise, sunset]
-lengths = [(21-11.5), (24 - (21-11.5)), 11.5, 21]
-shades = ['orange','blue']
-start = (15*lengths[2]) + 90
-worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
-worklengths = [2,3,5,6,8]
+def Plotting(times, cityname, plot):
+    """
+    This function calcuates the plotting parameters and plots them.
+    It accepts a list of time parameters for a location and a boolean for
+    graphing, and returns a graph (if needed).
+    """
+    data = [tdiff(times[0],times[2]), 24-tdiff(times[0],times[2]), tdiff(times[0],0), tdiff(times[2],0)]
+    labels = ['daytime', 'nighttime']
+    colors = ['orange','blue']
+    offset = (15*data[2]) + 90
 
-# plt.pie(sizes, explode=explode, labels=labels, colors=colors, radius=1.25)
-plt.pie(lengths[0:2], labels=times, colors=shades, startangle=-start, counterclock=False, radius=1.25)
-# plt.pie(worklengths, labels=worktimes, startangle=(15*()), radius=1)
+    plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset, counterclock=False, radius=1)
+    centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
+    fig = plt.gcf()
+    fig.gca().add_artist(centre_circle)
+    fig.legend([centre_circle], [cityname])
+    plt.axis('equal')
+    if plot == True:
+        plt.show()
 
-#draw a circle at the center of pie to make it look like a donut
-centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
-fig = plt.gcf()
-fig.gca().add_artist(centre_circle)
+Plotting(AllMarkers(durham, False), durham[2], True)
 
-# Set aspect ratio to be equal so that pie is drawn as a circle.
-plt.axis('equal')
-plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
+# worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
+# worklengths = [2,3,5,6,8]
 
 
 
