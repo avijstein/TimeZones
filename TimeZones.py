@@ -13,6 +13,7 @@ indianapolis = [39.768597, -86.162682, 'indianapolis']
 nyc = [40.730610, -73.935242, 'nyc']
 philly = [39.952583, -75.165222, 'philly']
 durham = [35.994034, -78.898621, 'Durham']
+alameda =  [37.767282, -122.246999, 'Alameda']
 
 def conTimeZones(longitude_shift):
     """
@@ -29,7 +30,6 @@ def conTimeZones(longitude_shift):
         diff = timedelta(seconds = abs(shift_sec))
     return(diff)
 
-# Sunrise Sunset Markers
 def DayMarkers(city):
     """
     This function takes a city's latitude and longitude and calculates
@@ -45,7 +45,6 @@ def DayMarkers(city):
         day_markers[i] = datetime.time(day_markers[i])
     return(day_markers)
 
-# Work Day Markers
 def WorkMarkers(city):
     """
     This function takes XY coordinates and calculates the traditional
@@ -59,7 +58,6 @@ def WorkMarkers(city):
     for i in range(0,3):
         work_param[i] = datetime.time(work_param[i])
     return(work_param)
-
 
 def AllMarkers(city, display):
     """
@@ -80,8 +78,6 @@ def AllMarkers(city, display):
             else:
                 print(marker_names[i], '\t', all_markers[i])
     return(all_markers)
-
-# AllMarkers(durham, True)
 
 def tdiff(time1, time2):
     """
@@ -118,7 +114,10 @@ def Plotting(times, cityname, plot):
     if plot == True:
         plt.show()
 
-Plotting(AllMarkers(durham, False), durham[2], True)
+Plotting(AllMarkers(indianapolis, True), indianapolis[2], True)
+Plotting(AllMarkers(philly, True), philly[2], True)
+Plotting(AllMarkers(durham, True), durham[2], True)
+Plotting(AllMarkers(alameda, True), alameda[2], True)
 
 # worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
 # worklengths = [2,3,5,6,8]
