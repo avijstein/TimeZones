@@ -79,20 +79,20 @@ def AllMarkers(city, display):
                 print(marker_names[i], '\t', all_markers[i])
     return(all_markers)
 
-def tdiff(time1, time2):
+def tdiff(time1, time2, time3):
     """
-    This function turns 1 or 2 time objects into a float number of hours. It
-    calculates the difference, or the distance from UTC midnight.
-    It accepts two datetime.time objects (or a zero) and returns a float.
+    This function calculates daytime and nighttime, as well as sunrise/sunset
+    times. It accepts two datetime.time objects and a string, and returns four
+    floats of the data needed for plotting.
     """
     a = datetime.strptime(str(time1), '%H:%M:%S.%f')
-    if time2 == 0:
-        c = (a - datetime.combine(a, time.min)).total_seconds()/3600
-        return(c)
-    else:
-        b = datetime.strptime(str(time2), '%H:%M:%S.%f')
-        c = (b - a).total_seconds()/3600
-        return(c)
+    b = datetime.strptime(str(time2), '%H:%M:%S.%f')
+    c = datetime.strptime(str(time3), '%H:%M:%S')
+    d = (a - datetime.combine(a, time.min)).total_seconds()/3600
+    e = (b - datetime.combine(b, time.min)).total_seconds()/3600
+    f = (c - datetime.combine(b, time.min)).total_seconds()/3600
+    daytime, nighttime, sunrise, sunset = f, 24-f, d, e
+    return([daytime, nighttime, sunrise, sunset])
 
 def Plotting(times, cityname, plot):
     """
@@ -100,7 +100,7 @@ def Plotting(times, cityname, plot):
     It accepts a list of time parameters for a location and a boolean for
     graphing, and returns a graph (if needed).
     """
-    data = [tdiff(times[0],times[2]), 24-tdiff(times[0],times[2]), tdiff(times[0],0), tdiff(times[2],0)]
+    data = tdiff(times[0], times[2], times[3])
     labels = ['daytime', 'nighttime']
     colors = ['orange','blue']
     offset = -((15*data[2]) + 90)
