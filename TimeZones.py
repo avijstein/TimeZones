@@ -3,14 +3,14 @@ from datetime import datetime, timedelta, date, time
 import requests, json
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
-# import numpy as np
+import numpy as np
 # import pandas as pd
 # import seaborn as sns
 
 # sample city locations
-indianapolis = [39.768597, -86.162682, 'indianapolis']
-nyc = [40.730610, -73.935242, 'nyc']
-philly = [39.952583, -75.165222, 'philly']
+indianapolis = [39.768597, -86.162682, 'Indianapolis']
+nyc = [40.730610, -73.935242, 'NYC']
+philly = [39.952583, -75.165222, 'Philly']
 durham = [35.994034, -78.898621, 'Durham']
 alameda =  [37.767282, -122.246999, 'Alameda']
 
@@ -119,34 +119,36 @@ def Plotting(times, cityname, plot):
     if plot == True:
         plt.show()
 
-def GridPlotting(city, dims):
+def GridPlotting(cities):
+    dims = int(np.sqrt(len(cities)))
     the_grid = GridSpec(dims, dims)
-    for i in range(0,dims):
-        for j in range(0,dims):
-            data = tdiff(AllMarkers(city, True))
+    i = 0
+    for j in range(0,dims):
+        for k in range(0,dims):
+            data = tdiff(AllMarkers(cities[i], False))
             labels = ['day', 'night']
             colors = ['orange','blue']
             offset = -((15*data[2]) + 90)
 
-            work_labels = ['work hours', 'free hours']
+            work_labels = ['office', 'home']
             work_colors = ['green', 'darkred']
             work_offset = -((15*data[6]) + 90)
-            ax = plt.subplot(the_grid[i, j], aspect=1)
+            ax = plt.subplot(the_grid[j, k], aspect=1)
             plt.pie(data[4:6], labels=work_labels, colors=work_colors, startangle=work_offset,
-                               labeldistance=1.1, counterclock=False, radius=1)
+                               labeldistance=1.1, counterclock=False, radius=1.5)
             plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset,
-                               labeldistance=.3, counterclock=False, radius=.75)
-            centre_circle = plt.Circle((0,0),0.5, color='white', fc='white',linewidth=1.25)
+                               labeldistance=.2, counterclock=False, radius=1.25)
+            centre_circle = plt.Circle((0,0),1.0, color='white', fc='white',linewidth=1.25)
             fig = plt.gcf()
             fig.gca().add_artist(centre_circle)
-            ax.set_title("City of " + str(i) + ',' + str(j))
-            fig.legend([centre_circle], [city[2]])
+            ax.set_title(cities[i][2])
             plt.axis('equal')
+
+            i += 1
 
     plt.show()
 
-GridPlotting(durham, 2)
-
+GridPlotting([durham, indianapolis, philly, alameda])
 
 # Plotting(AllMarkers(indianapolis, True), indianapolis[2], True)
 # Plotting(AllMarkers(philly, True), philly[2], True)
