@@ -103,7 +103,7 @@ def Plotting(times, cityname, plot):
     data = [tdiff(times[0],times[2]), 24-tdiff(times[0],times[2]), tdiff(times[0],0), tdiff(times[2],0)]
     labels = ['daytime', 'nighttime']
     colors = ['orange','blue']
-    offset = (15*data[2]) + 90
+    offset = -((15*data[2]) + 90)
 
     plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset, counterclock=False, radius=1)
     centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
@@ -114,10 +114,11 @@ def Plotting(times, cityname, plot):
     if plot == True:
         plt.show()
 
-Plotting(AllMarkers(indianapolis, True), indianapolis[2], True)
-Plotting(AllMarkers(philly, True), philly[2], True)
+# Plotting(AllMarkers(indianapolis, True), indianapolis[2], True)
+# Plotting(AllMarkers(philly, True), philly[2], True)
 Plotting(AllMarkers(durham, True), durham[2], True)
-Plotting(AllMarkers(alameda, True), alameda[2], True)
+# Plotting(AllMarkers(alameda, True), alameda[2], True)
+
 
 # worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
 # worklengths = [2,3,5,6,8]
