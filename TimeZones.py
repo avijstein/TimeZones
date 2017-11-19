@@ -1,12 +1,10 @@
+from time import sleep
 from datetime import datetime, timedelta, date, time
 import requests, json
 import matplotlib.pyplot as plt
 # import numpy as np
 # import pandas as pd
 # import seaborn as sns
-
-# Longitudinal Time Difference
-
 
 # sample city locations
 indianapolis = [39.768597, -86.162682, 'indianapolis']
@@ -79,20 +77,19 @@ def AllMarkers(city, display):
                 print(marker_names[i], '\t', all_markers[i])
     return(all_markers)
 
-def tdiff(time1, time2, time3):
+def tdiff(times):
     """
     This function calculates daytime and nighttime, as well as sunrise/sunset
     times. It accepts two datetime.time objects and a string, and returns four
     floats of the data needed for plotting.
     """
-    a = datetime.strptime(str(time1), '%H:%M:%S.%f')
-    b = datetime.strptime(str(time2), '%H:%M:%S.%f')
-    c = datetime.strptime(str(time3), '%H:%M:%S')
-    d = (a - datetime.combine(a, time.min)).total_seconds()/3600
-    e = (b - datetime.combine(b, time.min)).total_seconds()/3600
-    f = (c - datetime.combine(b, time.min)).total_seconds()/3600
-    daytime, nighttime, sunrise, sunset = f, 24-f, d, e
-    return([daytime, nighttime, sunrise, sunset])
+    thyme = [times[0], times[2], times[3], times[4], times[6]]
+    for t in range(0,len(thyme)):
+        thyme[t] = datetime.strptime(str(thyme[t])[:8], '%H:%M:%S')
+        thyme[t] = (thyme[t] - datetime.combine(thyme[t], time.min)).total_seconds()/3600
+    daytime, nighttime, sunrise, sunset = thyme[2], 24-thyme[2], thyme[0], thyme[1]
+    work_time, free_time, work_start, work_end = 8, 24-8, thyme[3], thyme[4]
+    return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end])
 
 def Plotting(times, cityname, plot):
     """
@@ -100,13 +97,18 @@ def Plotting(times, cityname, plot):
     It accepts a list of time parameters for a location and a boolean for
     graphing, and returns a graph (if needed).
     """
-    data = tdiff(times[0], times[2], times[3])
+    data = tdiff(times)
     labels = ['daytime', 'nighttime']
     colors = ['orange','blue']
     offset = -((15*data[2]) + 90)
 
-    plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset, counterclock=False, radius=1)
-    centre_circle = plt.Circle((0,0),0.75, color='white', fc='white',linewidth=1.25)
+    work_labels = ['work hours', 'free hours']
+    work_colors = ['green', 'black']
+    work_offset = -((15*data[6]) + 90)
+
+    plt.pie(data[4:6], labels=work_labels, colors=work_colors, startangle=work_offset, counterclock=False, radius=1)
+    plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset, counterclock=False, radius=.75)
+    centre_circle = plt.Circle((0,0),0.5, color='white', fc='white',linewidth=1.25)
     fig = plt.gcf()
     fig.gca().add_artist(centre_circle)
     fig.legend([centre_circle], [cityname])
@@ -118,10 +120,6 @@ def Plotting(times, cityname, plot):
 # Plotting(AllMarkers(philly, True), philly[2], True)
 Plotting(AllMarkers(durham, True), durham[2], True)
 # Plotting(AllMarkers(alameda, True), alameda[2], True)
-
-
-# worktimes = ['before_work', 'before_lunch', 'after_lunch', 'after_work', 'sleeping']
-# worklengths = [2,3,5,6,8]
 
 
 
