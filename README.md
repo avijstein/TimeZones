@@ -11,9 +11,9 @@ The basis of this project stems from the idea that time is just a social constru
 
 My first objective has been to build a comparison between different cities, so we can see their differences. I've visualized each city as a pie plot, with important day markers as its rings. For example, here is just NYC as I'm writing this.
 
-![](Ring Examples/nyc_sample.png)
+![NYC](/Ring Examples/nyc_sample.png)
 
 
 Here is a comparison between several cities around the world at a different moment in time.
 
-![](Ring Examples/sample_cities.png)
+![Various Cities](/Ring Examples/sample_cities.png)
