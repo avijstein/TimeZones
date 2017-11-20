@@ -109,7 +109,7 @@ def Plotting(city, plot):
     colors = ['#f4c20d', '#4885ed']
     offset = -((15*data[2]) + 90)
 
-    work_labels = ['work hours', 'free hours']
+    work_labels = ['office', 'home']
     work_colors = ['#3cba54', '#db3236']
     work_offset = -((15*data[6]) + 90)
 
@@ -187,7 +187,7 @@ def GridPlotting(cities):
 
 def Comparison(cities, rings):
     data1 = tdiff(AllMarkers(cities[0], True))
-    data2 = tdiff(AllMarkers(cities[1], False))
+    data2 = tdiff(AllMarkers(cities[1], True))
 
     now_data = [0.1, 24 - 0.1]
     now_labels = ['now', '']
@@ -202,7 +202,7 @@ def Comparison(cities, rings):
         data1 = data1[0:2]
         data2 = data2[0:2]
     if rings == 'workday':
-        labels = ['work hours', 'free hours']
+        labels = ['office', 'home']
         colors = ['#3cba54', '#db3236']
         offset1 = -((15*data1[6]) + 90)
         offset2 = -((15*data2[6]) + 90)
@@ -225,11 +225,62 @@ def Comparison(cities, rings):
     # fig.set_edgecolor('black')
     plt.show()
 
+def Comparison2(cities):
+    the_grid = GridSpec(1, 2)
+
+    data1 = tdiff(AllMarkers(cities[0], True))
+    data2 = tdiff(AllMarkers(cities[1], True))
+
+    now_data = [0.1, 24 - 0.1]
+    now_labels = ['now', '']
+    now_colors = [plt.cm.Greys(.999), plt.cm.Greys(.001)]
+    now_offset = -((15*data1[8]) + 90)
+
+    # DAYLIGHT PLOT
+    ax = plt.subplot(the_grid[0, 0], aspect=1)
+
+    labels = ['day', 'night']
+    colors = ['#f4c20d', '#4885ed']
+    offset1 = -((15*data1[2]) + 90)
+    offset2 = -((15*data2[2]) + 90)
+
+    a1 = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,labeldistance=1.07,counterclock=False,radius=1.25)
+    b1 = plt.pie(data1[0:2], labels=None, colors=colors, startangle=offset1, labeldistance=.1, counterclock=False, radius=1.0)
+    c1 = plt.pie(data2[0:2], labels=None, colors=colors, startangle=offset2, labeldistance=.1, counterclock=False, radius=.75)
+    d1 = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset, labeldistance=0, counterclock=False, radius=.5)
+
+    ax.set_title('Daylight')
+
+    # WORKDAY PLOT
+    ax = plt.subplot(the_grid[0, 1], aspect=1)
+
+    work_labels = ['office', 'home']
+    work_colors = ['#3cba54', '#db3236']
+    offset1 = -((15*data1[6]) + 90)
+    offset2 = -((15*data2[6]) + 90)
+
+    a2 = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset, labeldistance=1.07,counterclock=False,radius=1.25)
+    b2 = plt.pie(data1[4:6], labels=None, colors=work_colors, startangle=offset1, labeldistance=.1, counterclock=False, radius=1.0)
+    c2 = plt.pie(data2[4:6], labels=None, colors=work_colors, startangle=offset2, labeldistance=.1, counterclock=False, radius=.75)
+    d2 = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset, labeldistance=0, counterclock=False, radius=.5)
+
+    ax.set_title('Workday')
+
+
+    fig = plt.gcf()
+    plt.axis('equal')
+
+    plt.suptitle(cities[0][2] + ' and ' + cities[1][2])
+    plt.legend(b1[0] + b2[0], work_labels + labels, loc = (-.4,.75), title = 'Time of Day')
+    # plt.subplots_adjust(left=.04, bottom=.04, right=.98, top=.88, wspace=.35, hspace=.17)
+    plt.show()
+
+
+
 # Plotting(durham, True)
 # GridPlotting([durham, beijing, dubai, sydney])
-Comparison([durham, dubai], 'daylight')
-# add in something about inner ring / outer ring
-# maybe add two plots, one of each, now that you have them set up.
+# Comparison([durham, dubai], 'daylight')
+# Comparison2([durham, dubai])
 
 
 
