@@ -13,6 +13,9 @@ nyc = [40.730610, -73.935242, 'NYC']
 philly = [39.952583, -75.165222, 'Philly']
 durham = [35.994034, -78.898621, 'Durham']
 alameda =  [37.767282, -122.246999, 'Alameda']
+dubai = [25.276987, 55.296249, 'Dubai']
+beijing = [39.913818, 116.363625, 'Beijing']
+sydney = [-33.865143, 151.209900, 'Sydney']
 
 def conTimeZones(longitude_shift):
     """
@@ -52,8 +55,11 @@ def WorkMarkers(city):
     work_start = datetime.combine(datetime.utcnow(), time(hour = 9))
     work_lunch = datetime.combine(datetime.utcnow(), time(hour = 12))
     work_end = datetime.combine(datetime.utcnow(), time(hour = 17))
+    right_now = (datetime.utcnow()).time()
+    # rightnow = (right_now - datetime.combine(right_now, time.min)).total_seconds()/3600
+    # print(right_now)
     shift = conTimeZones(city[1])
-    work_param = [(work_start+shift),(work_lunch+shift),(work_end+shift)]
+    work_param = [(work_start+shift),(work_lunch+shift),(work_end+shift),(right_now)]
     for i in range(0,3):
         work_param[i] = datetime.time(work_param[i])
     return(work_param)
@@ -67,7 +73,7 @@ def AllMarkers(city, display):
     day = DayMarkers(city)
     work = WorkMarkers(city)
     marker_names = ['sunrise','solar_noon','sunset','day_length',
-                    'work_start','work_lunch','work_end']
+                    'work_start','work_lunch','work_end','right_now']
     all_markers = day + work
     if display == True:
         print('City: ', '\t', '\t', city[2].upper())
@@ -84,21 +90,21 @@ def tdiff(times):
     times. It accepts two datetime.time objects and a string, and returns four
     floats of the data needed for plotting.
     """
-    thyme = [times[0], times[2], times[3], times[4], times[6]]
+    thyme = [times[0], times[2], times[3], times[4], times[6], times[7]]
     for t in range(0,len(thyme)):
         thyme[t] = datetime.strptime(str(thyme[t])[:8], '%H:%M:%S')
         thyme[t] = (thyme[t] - datetime.combine(thyme[t], time.min)).total_seconds()/3600
     daytime, nighttime, sunrise, sunset = thyme[2], 24-thyme[2], thyme[0], thyme[1]
-    work_time, free_time, work_start, work_end = 8, 24-8, thyme[3], thyme[4]
-    return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end])
+    work_time, free_time, work_start, work_end, right_now = 8, 24-8, thyme[3], thyme[4], thyme[5]
+    return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end, right_now])
 
-def Plotting(times, cityname, plot):
+def Plotting(city, plot):
     """
     This function calcuates the plotting parameters and plots them.
     It accepts a list of time parameters for a location and a boolean for
     graphing, and returns a graph (if needed).
     """
-    data = tdiff(times)
+    data = tdiff(AllMarkers(city, True))
     labels = ['day', 'night']
     colors = ['orange','blue']
     offset = -((15*data[2]) + 90)
@@ -107,14 +113,25 @@ def Plotting(times, cityname, plot):
     work_colors = ['green', 'darkred']
     work_offset = -((15*data[6]) + 90)
 
+    now_data = [0.1, 24 - 0.1]
+    now_labels = ['now', '']
+    grey = plt.cm.Greys
+    now_colors = [grey(.999), grey(.001)]
+    now_offset = -((15*data[8]) + 90)
+
+
+    plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
+                      labeldistance=1.1, counterclock=False, radius=1.25)
     plt.pie(data[4:6], labels=work_labels, colors=work_colors, startangle=work_offset,
                        labeldistance=1.1, counterclock=False, radius=1)
     plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset,
-                       labeldistance=.3, counterclock=False, radius=.75)
-    centre_circle = plt.Circle((0,0),0.5, color='white', fc='white',linewidth=1.25)
+                       labeldistance=.25, counterclock=False, radius=.75)
+    # centre_circle = plt.Circle((0,0),0.5, color='white', fc='white',linewidth=1.25)
+    plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
+                      labeldistance=0, counterclock=False, radius=.5)
     fig = plt.gcf()
-    fig.gca().add_artist(centre_circle)
-    fig.legend([centre_circle], [cityname])
+    # fig.gca().add_artist(centre_circle)
+    # fig.legend([centre_circle], [city[2]])
     plt.axis('equal')
     if plot == True:
         plt.show()
@@ -125,7 +142,7 @@ def GridPlotting(cities):
     i = 0
     for j in range(0,dims):
         for k in range(0,dims):
-            data = tdiff(AllMarkers(cities[i], False))
+            data = tdiff(AllMarkers(cities[i], True))
             labels = ['day', 'night']
             colors = ['orange','blue']
             offset = -((15*data[2]) + 90)
@@ -133,33 +150,37 @@ def GridPlotting(cities):
             work_labels = ['office', 'home']
             work_colors = ['green', 'darkred']
             work_offset = -((15*data[6]) + 90)
+
+            now_data = [0.1, 24 - 0.1]
+            now_labels = ['now', '']
+            grey = plt.cm.Greys
+            now_colors = [grey(.999), grey(.001)]
+            now_offset = -((15*data[8]) + 90)
+
             ax = plt.subplot(the_grid[j, k], aspect=1)
+            plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
+                              labeldistance=1.1, counterclock=False, radius=1.25)
             plt.pie(data[4:6], labels=work_labels, colors=work_colors, startangle=work_offset,
-                               labeldistance=1.1, counterclock=False, radius=1.5)
+                               labeldistance=1.1, counterclock=False, radius=1.0)
             plt.pie(data[0:2], labels=labels, colors=colors, startangle=offset,
-                               labeldistance=.2, counterclock=False, radius=1.25)
-            centre_circle = plt.Circle((0,0),1.0, color='white', fc='white',linewidth=1.25)
+                               labeldistance=.1, counterclock=False, radius=.75)
+            # centre_circle = plt.Circle((0,0),1.0, color='white', fc='white',linewidth=1.25)
+            plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
+                              labeldistance=0, counterclock=False, radius=.5)
             fig = plt.gcf()
-            fig.gca().add_artist(centre_circle)
+
+            # fig.gca().add_artist(centre_circle)
             ax.set_title(cities[i][2])
             plt.axis('equal')
 
             i += 1
-
+    plt.suptitle('Cities Without Timezones')
+    # plt.figure(num=None, figsize=(10, 10), dpi=200)
     plt.show()
 
-GridPlotting([durham, indianapolis, philly, alameda])
 
-# Plotting(AllMarkers(indianapolis, True), indianapolis[2], True)
-# Plotting(AllMarkers(philly, True), philly[2], True)
-# Plotting(AllMarkers(durham, True), durham[2], True)
-# Plotting(AllMarkers(alameda, True), alameda[2], True)
-
-
-
-
-
-
+# Plotting(durham, True)
+GridPlotting([durham, beijing, dubai, sydney])
 
 
 
