@@ -148,10 +148,12 @@ def GridPlotting(cities):
             data = tdiff(AllMarkers(cities[i], False))
             labels = ['day', 'night']
             colors = ['orange','blue']
+            colors = ['#f4c20d', '#4885ed']
             offset = -((15*data[2]) + 90)
 
             work_labels = ['office', 'home']
             work_colors = [plt.cm.Greens(.85), plt.cm.Reds(.70)]
+            work_colors = ['#3cba54', '#db3236']
             work_offset = -((15*data[6]) + 90)
 
             now_data = [0.1, 24 - 0.1]
