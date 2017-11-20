@@ -106,11 +106,11 @@ def Plotting(city, plot):
     """
     data = tdiff(AllMarkers(city, True))
     labels = ['day', 'night']
-    colors = ['orange','blue']
+    colors = ['#f4c20d', '#4885ed']
     offset = -((15*data[2]) + 90)
 
     work_labels = ['work hours', 'free hours']
-    work_colors = ['green', 'darkred']
+    work_colors = ['#3cba54', '#db3236']
     work_offset = -((15*data[6]) + 90)
 
     now_data = [0.1, 24 - 0.1]
@@ -147,12 +147,12 @@ def GridPlotting(cities):
         for k in range(0,dims):
             data = tdiff(AllMarkers(cities[i], False))
             labels = ['day', 'night']
-            colors = ['orange','blue']
+            # colors = ['orange','blue']
             colors = ['#f4c20d', '#4885ed']
             offset = -((15*data[2]) + 90)
 
             work_labels = ['office', 'home']
-            work_colors = [plt.cm.Greens(.85), plt.cm.Reds(.70)]
+            # work_colors = [plt.cm.Greens(.85), plt.cm.Reds(.70)]
             work_colors = ['#3cba54', '#db3236']
             work_offset = -((15*data[6]) + 90)
 
@@ -161,10 +161,11 @@ def GridPlotting(cities):
             grey = plt.cm.Greys
             now_colors = [grey(.999), grey(.001)]
             now_offset = -((15*data[8]) + 90)
+            # now_offset = 90
 
             ax = plt.subplot(the_grid[j, k], aspect=1)
             a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
-                              labeldistance=1.1, counterclock=False, radius=1.25)
+                              labeldistance=1.07, counterclock=False, radius=1.25)
             b = plt.pie(data[4:6], labels=None, colors=work_colors, startangle=work_offset,
                                labeldistance=1.1, counterclock=False, radius=1.0)
             c = plt.pie(data[0:2], labels=None, colors=colors, startangle=offset,
@@ -177,17 +178,44 @@ def GridPlotting(cities):
             # fig.gca().add_artist(centre_circle)
             ax.set_title(cities[i][2])
             plt.axis('equal')
-
             i += 1
+
     plt.suptitle('Cities Without Timezones')
-    plt.legend(b[0] + c[0], work_labels + labels, loc = 'center',
-               bbox_to_anchor=(-.15, 1), title = 'Times of Day')
+    plt.subplots_adjust(left=.04, bottom=.04, right=.98, top=.88, wspace=.35, hspace=.17)
+    plt.legend(b[0] + c[0], work_labels + labels, loc = (-.3, .85), title = 'Time of Day')
     plt.show()
 
+def Comparison(cities):
+    data1 = tdiff(AllMarkers(cities[0], True))
+    data2 = tdiff(AllMarkers(cities[1], True))
+    labels = ['day', 'night']
+    colors = ['#f4c20d', '#4885ed']
+    # offset = -((15*data[2]) + 90)
+
+    now_data = [0.1, 24 - 0.1]
+    now_labels = ['now', '']
+    now_colors = [plt.cm.Greys(.999), plt.cm.Greys(.001)]
+    now_offset = -((15*data1[8]) + 90)
+
+    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
+                          labeldistance=1.07, counterclock=False, radius=1.25)
+    b = plt.pie(data1[0:2], labels=None, colors=colors, startangle=-((15*data1[2]) + 90),
+                           labeldistance=.1, counterclock=False, radius=1.0)
+    c = plt.pie(data2[0:2], labels=None, colors=colors, startangle=-((15*data2[2]) + 90),
+                           labeldistance=.1, counterclock=False, radius=.75)
+    d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
+                          labeldistance=0, counterclock=False, radius=.5)
+    fig = plt.gcf()
+    plt.axis('equal')
+
+    plt.suptitle(cities[0][2] + ' and ' + cities[1][2])
+    plt.legend(b[0], labels, title = 'Times of Day')
+    # fig.set_edgecolor('black')
+    plt.show()
 
 # Plotting(durham, True)
-GridPlotting([durham, beijing, dubai, sydney])
-
+# GridPlotting([durham, beijing, dubai, sydney])
+Comparison([durham, dubai])
 
 
 
