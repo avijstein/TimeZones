@@ -187,29 +187,33 @@ def GridPlotting(cities):
 
 def Comparison(cities, rings):
     data1 = tdiff(AllMarkers(cities[0], True))
-    data2 = tdiff(AllMarkers(cities[1], True))
-
-    if rings == 'daylight':
-        labels = ['day', 'night']
-        colors = ['#f4c20d', '#4885ed']
-        offset1 = -((15*data1[2]) + 90)
-        offset2 = -((15*data2[2]) + 90)
-    if rings == 'workday':
-        labels = ['work hours', 'free hours']
-        colors = ['#3cba54', '#db3236']
-        offset1 = -((15*data1[6]) + 90)
-        offset2 = -((15*data2[6]) + 90)
+    data2 = tdiff(AllMarkers(cities[1], False))
 
     now_data = [0.1, 24 - 0.1]
     now_labels = ['now', '']
     now_colors = [plt.cm.Greys(.999), plt.cm.Greys(.001)]
     now_offset = -((15*data1[8]) + 90)
 
+    if rings == 'daylight':
+        labels = ['day', 'night']
+        colors = ['#f4c20d', '#4885ed']
+        offset1 = -((15*data1[2]) + 90)
+        offset2 = -((15*data2[2]) + 90)
+        data1 = data1[0:2]
+        data2 = data2[0:2]
+    if rings == 'workday':
+        labels = ['work hours', 'free hours']
+        colors = ['#3cba54', '#db3236']
+        offset1 = -((15*data1[6]) + 90)
+        offset2 = -((15*data2[6]) + 90)
+        data1 = data1[4:6]
+        data2 = data2[4:6]
+
     a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
                           labeldistance=1.07, counterclock=False, radius=1.25)
-    b = plt.pie(data1[0:2], labels=None, colors=colors, startangle=offset1,
+    b = plt.pie(data1, labels=None, colors=colors, startangle=offset1,
                            labeldistance=.1, counterclock=False, radius=1.0)
-    c = plt.pie(data2[0:2], labels=None, colors=colors, startangle=offset2,
+    c = plt.pie(data2, labels=None, colors=colors, startangle=offset2,
                            labeldistance=.1, counterclock=False, radius=.75)
     d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
                           labeldistance=0, counterclock=False, radius=.5)
@@ -223,7 +227,7 @@ def Comparison(cities, rings):
 
 # Plotting(durham, True)
 # GridPlotting([durham, beijing, dubai, sydney])
-Comparison([durham, dubai], 'workday')
+Comparison([durham, dubai], 'daylight')
 # add in something about inner ring / outer ring
 # maybe add two plots, one of each, now that you have them set up.
 
