@@ -1,10 +1,11 @@
+import sys
 from time import sleep
 from datetime import datetime, timedelta, date, time
 import requests, json
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import numpy as np
-# import pandas as pd
+import pandas as pd
 # import seaborn as sns
 
 # sample city locations
@@ -37,6 +38,8 @@ def DayMarkers(city):
     This function takes a city's latitude and longitude and calculates
     the sunrise, sunset, etc. This could be a city or any XY coordinate pair.
     """
+    if city == []:
+        sys.exit('Input includes an invalid city.')
     payload = {'lat':city[0], 'lng':0.0}
     r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
     q = r.json()['results']
@@ -98,12 +101,32 @@ def tdiff(times):
     work_time, free_time, work_start, work_end, right_now = 8, 24-8, thyme[3], thyme[4], thyme[5]
     return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end, right_now])
 
-def Plotting(city, plot):
+def CityFinder(city_name):
+    """
+    Takes a string of a city, gives back the top match as a list with
+    latitude (float), longitude (float), and city name (string).
+    """
+    df = pd.read_csv('City Locations/simplemaps-worldcities-basic.csv')
+    df = df.iloc[:,[2,3,0,4,5]]
+    # df = df.sort_values('pop', ascending = False)
+    df = df[df['pop'] > 100000]
+    df = df.iloc[:,:3]
+
+    city = df[df.city == city_name]
+    if len(city) > 0:
+        return city.values[0]
+    if len(city) == 0:
+        return []
+
+def Plotting(city):
     """
     This function calcuates the plotting parameters and plots them.
     It accepts a list of time parameters for a location and a boolean for
     graphing, and returns a graph (if needed).
     """
+    if type(city) == str:
+        city = CityFinder(city)
+
     data = tdiff(AllMarkers(city, True))
     labels = ['day', 'night']
     colors = ['#f4c20d', '#4885ed']
@@ -135,12 +158,22 @@ def Plotting(city, plot):
     plt.axis('equal')
     plt.suptitle(city[2])
     plt.legend(b[0] + c[0], work_labels + labels, title = 'Times of Day')
-
-    if plot == True:
-        plt.show()
+    plt.show()
 
 def GridPlotting(cities):
-    dims = int(np.sqrt(len(cities)))
+    """
+    Accepts cities in the form [lat (float), lon (float), name (string)],
+    or city names (strings) to be looked up with CityFinder. Returns a plot
+    of all the cities, must be square.
+    """
+    for i in range(0, len(cities)):
+            if type(cities[i]) == str:
+                cities[i] = CityFinder(cities[i])
+    if int(np.sqrt(len(cities))) == np.sqrt(len(cities)):
+        dims = int(np.sqrt(len(cities)))
+    else:
+        print('Input needs a square number of cities.')
+        return
     the_grid = GridSpec(dims, dims)
     i = 0
     for j in range(0,dims):
@@ -185,7 +218,7 @@ def GridPlotting(cities):
     plt.legend(b[0] + c[0], work_labels + labels, loc = (-.3, .85), title = 'Time of Day')
     plt.show()
 
-def Comparison(cities, rings):
+def OneRing(cities, rings):
     data1 = tdiff(AllMarkers(cities[0], True))
     data2 = tdiff(AllMarkers(cities[1], True))
 
@@ -225,7 +258,7 @@ def Comparison(cities, rings):
     # fig.set_edgecolor('black')
     plt.show()
 
-def Comparison2(cities):
+def Comparison(cities):
     the_grid = GridSpec(1, 2)
 
     data1 = tdiff(AllMarkers(cities[0], True))
@@ -276,12 +309,11 @@ def Comparison2(cities):
     plt.show()
 
 
-# Plotting(nyc, True)
+# Plotting(durham)
+# Plotting('Durham')
 # GridPlotting([durham, beijing, dubai, sydney])
-# Comparison([durham, dubai], 'daylight')
-# Comparison2([durham, dubai])
-
-
+# OneRing([durham, dubai], 'daylight')
+# Comparison([durham, dubai])
 
 
 
