@@ -271,18 +271,15 @@ def Comparison2(cities):
     plt.axis('equal')
 
     plt.suptitle(cities[0][2] + ' and ' + cities[1][2])
-    plt.legend(b1[0] + b2[0], work_labels + labels, loc = (-.4,.75), title = 'Time of Day')
+    plt.legend(b1[0] + b2[0], labels + work_labels, loc = (-.4,.75), title = 'Time of Day')
     # plt.subplots_adjust(left=.04, bottom=.04, right=.98, top=.88, wspace=.35, hspace=.17)
     plt.show()
 
 
-
-# Plotting(durham, True)
+# Plotting(nyc, True)
 # GridPlotting([durham, beijing, dubai, sydney])
 # Comparison([durham, dubai], 'daylight')
 # Comparison2([durham, dubai])
-
-
 
 
 
