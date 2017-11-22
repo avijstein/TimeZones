@@ -6,7 +6,16 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import numpy as np
 import pandas as pd
-# import seaborn as sns
+# import agate
+
+def GoogleMaps(location, api_key):
+    payload = {'address': str(location), 'key':api_key}
+    r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?', params=payload)
+    q = r.json()['results'][0]['geometry']['location']
+    lat, lng = q['lat'], q['lng']
+    return([lat, lng, location])
+
+# print(GoogleMaps('Philly'))
 
 # sample city locations
 indianapolis = [39.768597, -86.162682, 'Indianapolis']
@@ -122,10 +131,10 @@ def Plotting(city):
     """
     This function calcuates the plotting parameters and plots them.
     It accepts a list of time parameters for a location and a boolean for
-    graphing, and returns a graph (if needed).
+    graphing, and returns a graph.
     """
     if type(city) == str:
-        city = CityFinder(city)
+        city = GoogleMaps(city)
 
     data = tdiff(AllMarkers(city, True))
     labels = ['day', 'night']
@@ -142,19 +151,12 @@ def Plotting(city):
     now_colors = [grey(.999), grey(.001)]
     now_offset = -((15*data[8]) + 90)
 
-
-    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
-                          labeldistance=1.1, counterclock=False, radius=1)
-    b= plt.pie(data[4:6], labels=None, colors=work_colors, startangle=work_offset,
-                          labeldistance=1.1, counterclock=False, radius=.75)
-    c = plt.pie(data[0:2], labels=None, colors=colors, startangle=offset,
-                           labeldistance=.25, counterclock=False, radius=.5)
-    # centre_circle = plt.Circle((0,0),0.5, color='white', fc='white',linewidth=1.25)
-    d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
-                          labeldistance=0, counterclock=False, radius=.25)
+    # plotting each level of the pie chart, from outer to inner, overlapping each other.
+    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset, labeldistance=1.1, counterclock=False, radius=1)
+    b= plt.pie(data[4:6], labels=None, colors=work_colors, startangle=work_offset, labeldistance=1.1, counterclock=False, radius=.75)
+    c = plt.pie(data[0:2], labels=None, colors=colors, startangle=offset, labeldistance=.25, counterclock=False, radius=.5)
+    d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset, labeldistance=0, counterclock=False, radius=.25)
     fig = plt.gcf()
-    # fig.gca().add_artist(centre_circle)
-    # fig.legend([centre_circle], [city[2]])
     plt.axis('equal')
     plt.suptitle(city[2])
     plt.legend(b[0] + c[0], work_labels + labels, title = 'Times of Day')
@@ -166,14 +168,17 @@ def GridPlotting(cities):
     or city names (strings) to be looked up with CityFinder. Returns a plot
     of all the cities, must be square.
     """
+    # making sure it's a square number of cities.
     for i in range(0, len(cities)):
             if type(cities[i]) == str:
-                cities[i] = CityFinder(cities[i])
+                cities[i] = GoogleMaps(cities[i])
     if int(np.sqrt(len(cities))) == np.sqrt(len(cities)):
         dims = int(np.sqrt(len(cities)))
     else:
         print('Input needs a square number of cities.')
         return
+
+    # plotting a grid of the "Plotting" graphs.
     the_grid = GridSpec(dims, dims)
     i = 0
     for j in range(0,dims):
@@ -194,7 +199,8 @@ def GridPlotting(cities):
             grey = plt.cm.Greys
             now_colors = [grey(.999), grey(.001)]
             now_offset = -((15*data[8]) + 90)
-            # now_offset = 90
+            # changing now_offset to position the needle to wherever.
+            # now_offset = 180
 
             ax = plt.subplot(the_grid[j, k], aspect=1)
             a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
@@ -203,12 +209,9 @@ def GridPlotting(cities):
                                labeldistance=1.1, counterclock=False, radius=1.0)
             c = plt.pie(data[0:2], labels=None, colors=colors, startangle=offset,
                                labeldistance=.1, counterclock=False, radius=.75)
-            # centre_circle = plt.Circle((0,0),1.0, color='white', fc='white',linewidth=1.25)
             d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
                               labeldistance=0, counterclock=False, radius=.5)
             fig = plt.gcf()
-
-            # fig.gca().add_artist(centre_circle)
             ax.set_title(cities[i][2])
             plt.axis('equal')
             i += 1
@@ -242,14 +245,10 @@ def OneRing(cities, rings):
         data1 = data1[4:6]
         data2 = data2[4:6]
 
-    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
-                          labeldistance=1.07, counterclock=False, radius=1.25)
-    b = plt.pie(data1, labels=None, colors=colors, startangle=offset1,
-                           labeldistance=.1, counterclock=False, radius=1.0)
-    c = plt.pie(data2, labels=None, colors=colors, startangle=offset2,
-                           labeldistance=.1, counterclock=False, radius=.75)
-    d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset,
-                          labeldistance=0, counterclock=False, radius=.5)
+    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,labeldistance=1.07, counterclock=False, radius=1.25)
+    b = plt.pie(data1, labels=None, colors=colors, startangle=offset1, labeldistance=.1, counterclock=False, radius=1.0)
+    c = plt.pie(data2, labels=None, colors=colors, startangle=offset2, labeldistance=.1, counterclock=False, radius=.75)
+    d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset, labeldistance=0, counterclock=False, radius=.5)
     fig = plt.gcf()
     plt.axis('equal')
 
@@ -299,7 +298,6 @@ def Comparison(cities):
 
     ax.set_title('Workday')
 
-
     fig = plt.gcf()
     plt.axis('equal')
 
@@ -310,11 +308,11 @@ def Comparison(cities):
 
 
 # Plotting(durham)
-# Plotting('Durham')
+# Plotting('durham')
 # GridPlotting([durham, beijing, dubai, sydney])
-# OneRing([durham, dubai], 'daylight')
+# GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
+# OneRing([durham, dubai], 'daylight')s
 # Comparison([durham, dubai])
-
 
 
 
