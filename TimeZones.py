@@ -6,16 +6,16 @@ import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import numpy as np
 import pandas as pd
+from api_key import gmaps
 # import agate
+# import seaborn as sns
 
-def GoogleMaps(location, api_key):
-    payload = {'address': str(location), 'key':api_key}
+def GoogleMaps(location):
+    payload = {'address': str(location), 'key': gmaps}
     r = requests.get('https://maps.googleapis.com/maps/api/geocode/json?', params=payload)
     q = r.json()['results'][0]['geometry']['location']
     lat, lng = q['lat'], q['lng']
     return([lat, lng, location])
-
-# print(GoogleMaps('Philly'))
 
 # sample city locations
 indianapolis = [39.768597, -86.162682, 'Indianapolis']
@@ -311,7 +311,7 @@ def Comparison(cities):
 # Plotting('durham')
 # GridPlotting([durham, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
-# OneRing([durham, dubai], 'daylight')s
+# OneRing([durham, dubai], 'daylight')
 # Comparison([durham, dubai])
 
 
