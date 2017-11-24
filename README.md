@@ -17,3 +17,6 @@ My first objective has been to build a comparison between different cities, so w
 Here is a comparison between several cities around the world at a different moment in time.
 
 ![Various Cities](https://github.com/avijstein/TimeZones/blob/master/Ring%20Examples/sample_cities.png)
+
+
+(This project uses a Google Maps API free key. I'm keeping mine private in a separate file, so cloning this repository would require a user to add their own key when using this specific API.)
