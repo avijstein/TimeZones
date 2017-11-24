@@ -7,8 +7,6 @@ from matplotlib.gridspec import GridSpec
 import numpy as np
 import pandas as pd
 from api_key import gmaps
-# import agate
-# import seaborn as sns
 
 def GoogleMaps(location):
     payload = {'address': str(location), 'key': gmaps}
@@ -42,41 +40,12 @@ def conTimeZones(longitude_shift):
         diff = timedelta(seconds = abs(shift_sec))
     return(diff)
 
-# def DayMarkers(city):
-#     """
-#     This function takes a city's latitude and longitude and calculates
-#     the sunrise, sunset, etc. This could be a city or any XY coordinate pair.
-#     """
-#     if city == []:
-#         sys.exit('Input includes an invalid city.')
-#     payload = {'lat':city[0], 'lng':0.0}
-#     r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
-#     q = r.json()['results']
-#     day_markers = [q['sunrise'], q['solar_noon'], q['sunset'], q['day_length']]
-#     for i in range(0,3):
-#         day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
-#         day_markers[i] = day_markers[i] + conTimeZones(city[1])
-#         day_markers[i] = datetime.time(day_markers[i])
-#     return(day_markers)
-
-# def WorkMarkers(city):
-#     """
-#     This function takes XY coordinates and calculates the traditional
-#     "9-5" workday for that location in the UTC-0 time.
-#     """
-#     work_start = datetime.combine(datetime.utcnow(), time(hour = 9))
-#     work_lunch = datetime.combine(datetime.utcnow(), time(hour = 12))
-#     work_end = datetime.combine(datetime.utcnow(), time(hour = 17))
-#     right_now = (datetime.utcnow()).time()
-#     # rightnow = (right_now - datetime.combine(right_now, time.min)).total_seconds()/3600
-#     # print(right_now)
-#     shift = conTimeZones(city[1])
-#     work_param = [(work_start+shift),(work_lunch+shift),(work_end+shift),(right_now)]
-#     for i in range(0,3):
-#         work_param[i] = datetime.time(work_param[i])
-#     return(work_param)
-
 def AllMarkers(city, display):
+    """
+    This function takes a city (name (string), latitude (float), longitude (float)),
+    and outputs the common day and work markers in UTC time. Uses a sunrise-sunset
+    API for day markers.
+    """
     # DAYMARKERS
     payload = {'lat':city[0], 'lng':0.0}
     r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
