@@ -42,13 +42,42 @@ def conTimeZones(longitude_shift):
         diff = timedelta(seconds = abs(shift_sec))
     return(diff)
 
-def DayMarkers(city):
-    """
-    This function takes a city's latitude and longitude and calculates
-    the sunrise, sunset, etc. This could be a city or any XY coordinate pair.
-    """
-    if city == []:
-        sys.exit('Input includes an invalid city.')
+# def DayMarkers(city):
+#     """
+#     This function takes a city's latitude and longitude and calculates
+#     the sunrise, sunset, etc. This could be a city or any XY coordinate pair.
+#     """
+#     if city == []:
+#         sys.exit('Input includes an invalid city.')
+#     payload = {'lat':city[0], 'lng':0.0}
+#     r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
+#     q = r.json()['results']
+#     day_markers = [q['sunrise'], q['solar_noon'], q['sunset'], q['day_length']]
+#     for i in range(0,3):
+#         day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
+#         day_markers[i] = day_markers[i] + conTimeZones(city[1])
+#         day_markers[i] = datetime.time(day_markers[i])
+#     return(day_markers)
+
+# def WorkMarkers(city):
+#     """
+#     This function takes XY coordinates and calculates the traditional
+#     "9-5" workday for that location in the UTC-0 time.
+#     """
+#     work_start = datetime.combine(datetime.utcnow(), time(hour = 9))
+#     work_lunch = datetime.combine(datetime.utcnow(), time(hour = 12))
+#     work_end = datetime.combine(datetime.utcnow(), time(hour = 17))
+#     right_now = (datetime.utcnow()).time()
+#     # rightnow = (right_now - datetime.combine(right_now, time.min)).total_seconds()/3600
+#     # print(right_now)
+#     shift = conTimeZones(city[1])
+#     work_param = [(work_start+shift),(work_lunch+shift),(work_end+shift),(right_now)]
+#     for i in range(0,3):
+#         work_param[i] = datetime.time(work_param[i])
+#     return(work_param)
+
+def AllMarkers(city, display):
+    # DAYMARKERS
     payload = {'lat':city[0], 'lng':0.0}
     r = requests.get('https://api.sunrise-sunset.org/json', params=payload)
     q = r.json()['results']
@@ -57,36 +86,20 @@ def DayMarkers(city):
         day_markers[i] = datetime.strptime(day_markers[i], '%I:%M:%S %p')
         day_markers[i] = day_markers[i] + conTimeZones(city[1])
         day_markers[i] = datetime.time(day_markers[i])
-    return(day_markers)
 
-def WorkMarkers(city):
-    """
-    This function takes XY coordinates and calculates the traditional
-    "9-5" workday for that location in the UTC-0 time.
-    """
+    # WORKMARKERS
     work_start = datetime.combine(datetime.utcnow(), time(hour = 9))
     work_lunch = datetime.combine(datetime.utcnow(), time(hour = 12))
     work_end = datetime.combine(datetime.utcnow(), time(hour = 17))
     right_now = (datetime.utcnow()).time()
-    # rightnow = (right_now - datetime.combine(right_now, time.min)).total_seconds()/3600
-    # print(right_now)
     shift = conTimeZones(city[1])
     work_param = [(work_start+shift),(work_lunch+shift),(work_end+shift),(right_now)]
     for i in range(0,3):
         work_param[i] = datetime.time(work_param[i])
-    return(work_param)
 
-def AllMarkers(city, display):
-    """
-    This function combines the marker functions (to consolidated later).
-    It accepts a city location and name, and boolean for display. It returns
-    all of the markers, and possibly a print out of the values.
-    """
-    day = DayMarkers(city)
-    work = WorkMarkers(city)
+    all_markers = day_markers + work_param
     marker_names = ['sunrise','solar_noon','sunset','day_length',
                     'work_start','work_lunch','work_end','right_now']
-    all_markers = day + work
     if display == True:
         print('City: ', '\t', '\t', city[2].upper())
         for i in range(0,len(all_markers)):
@@ -222,6 +235,14 @@ def GridPlotting(cities):
     plt.show()
 
 def OneRing(cities, rings):
+    """
+    This function takes two cities and compares either their daylight or workday
+    hours, based on input preference.
+    """
+    for i in range(0, len(cities)):
+            if type(cities[i]) == str:
+                cities[i] = GoogleMaps(cities[i])
+
     data1 = tdiff(AllMarkers(cities[0], True))
     data2 = tdiff(AllMarkers(cities[1], True))
 
@@ -258,6 +279,14 @@ def OneRing(cities, rings):
     plt.show()
 
 def Comparison(cities):
+    """
+    This function takes two cities and compares both their daylight or workday
+    hours.
+    """
+    for i in range(0, len(cities)):
+            if type(cities[i]) == str:
+                cities[i] = GoogleMaps(cities[i])
+
     the_grid = GridSpec(1, 2)
 
     data1 = tdiff(AllMarkers(cities[0], True))
@@ -308,12 +337,11 @@ def Comparison(cities):
 
 
 # Plotting(durham)
-# Plotting('durham')
+# Plotting('philly')
 # GridPlotting([durham, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
-# OneRing([durham, dubai], 'daylight')
-# Comparison([durham, dubai])
-
+# OneRing(['durham', 'dubai'], 'daylight')
+# Comparison(['durham', 'london'])
 
 
 
