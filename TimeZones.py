@@ -132,16 +132,19 @@ def Plotting(city):
     grey = plt.cm.Greys
     now_colors = [grey(.999), grey(.001)]
     now_offset = -((15*data[8]) + 90)
+    # now_offset = 270
 
     # plotting each level of the pie chart, from outer to inner, overlapping each other.
-    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset, labeldistance=1.1, counterclock=False, radius=1)
+    a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset, labeldistance=1.05, counterclock=False, radius=1)
     b= plt.pie(data[4:6], labels=None, colors=work_colors, startangle=work_offset, labeldistance=1.1, counterclock=False, radius=.75)
     c = plt.pie(data[0:2], labels=None, colors=colors, startangle=offset, labeldistance=.25, counterclock=False, radius=.5)
     d = plt.pie(now_data, labels=None, colors=now_colors, startangle=now_offset, labeldistance=0, counterclock=False, radius=.25)
     fig = plt.gcf()
     plt.axis('equal')
     plt.suptitle(city[2])
-    plt.legend(b[0] + c[0], work_labels + labels, title = 'Times of Day')
+    plt.subplots_adjust(left=0, bottom=.15, right=1, top=.9, wspace=0, hspace=0)
+    plt.legend(b[0] + c[0], work_labels + labels, bbox_to_anchor = (.35/2, -1.0, .65, 1),
+               ncol = 4, mode = 'expand', title = 'Times of Day')
     plt.show()
 
 def GridPlotting(cities):
@@ -172,8 +175,10 @@ def GridPlotting(cities):
             offset = -((15*data[2]) + 90)
 
             work_labels = ['office', 'home']
+            # work_labels = ['office', '']
             # work_colors = [plt.cm.Greens(.85), plt.cm.Reds(.70)]
             work_colors = ['#3cba54', '#db3236']
+            # work_colors = ['#3cba54', 'white']
             work_offset = -((15*data[6]) + 90)
 
             now_data = [0.1, 24 - 0.1]
@@ -181,8 +186,7 @@ def GridPlotting(cities):
             grey = plt.cm.Greys
             now_colors = [grey(.999), grey(.001)]
             now_offset = -((15*data[8]) + 90)
-            # changing now_offset to position the needle to wherever.
-            # now_offset = 180
+            # now_offset = 90
 
             ax = plt.subplot(the_grid[j, k], aspect=1)
             a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
@@ -198,9 +202,11 @@ def GridPlotting(cities):
             plt.axis('equal')
             i += 1
 
-    plt.suptitle('Cities Without Timezones')
-    plt.subplots_adjust(left=.04, bottom=.04, right=.98, top=.88, wspace=.35, hspace=.17)
-    plt.legend(b[0] + c[0], work_labels + labels, loc = (-.3, .85), title = 'Time of Day')
+    # plt.suptitle('Cities Without Timezones')
+    plt.subplots_adjust(left=.02, bottom=.15, right=.98, top=.88, wspace=0, hspace=.17)
+    # plt.legend(c[0] + b[0] , labels + [work_labels[0]], loc = (-.35, .85), title = 'Time of Day')
+    plt.legend(b[0] + c[0] , work_labels + labels, bbox_to_anchor = (-.6, -.4, 1.2, .5),
+               ncol = 4, mode = 'expand', title = 'Time of Day')
     plt.show()
 
 def OneRing(cities, rings):
@@ -305,12 +311,20 @@ def Comparison(cities):
     plt.show()
 
 
-# Plotting(durham)
+Plotting(durham)
 # Plotting('philly')
-# GridPlotting([durham, beijing, dubai, sydney])
+GridPlotting([durham, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
 # OneRing(['durham', 'dubai'], 'daylight')
 # Comparison(['durham', 'london'])
+
+
+
+
+
+
+
+
 
 
 
