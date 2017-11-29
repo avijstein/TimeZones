@@ -153,10 +153,11 @@ def GridPlotting(cities):
     or city names (strings) to be looked up with CityFinder. Returns a plot
     of all the cities, must be square.
     """
-    # making sure it's a square number of cities.
+    # geocoding done in GoogleMaps if it's not a known test city.
     for i in range(0, len(cities)):
             if type(cities[i]) == str:
                 cities[i] = GoogleMaps(cities[i])
+    # making sure it's a square number of cities.
     if int(np.sqrt(len(cities))) == np.sqrt(len(cities)):
         dims = int(np.sqrt(len(cities)))
     else:
@@ -202,7 +203,7 @@ def GridPlotting(cities):
             plt.axis('equal')
             i += 1
 
-    # plt.suptitle('Cities Without Timezones')
+    plt.suptitle('Comparing Times Without Timezones')
     plt.subplots_adjust(left=.02, bottom=.15, right=.98, top=.88, wspace=0, hspace=.17)
     # plt.legend(c[0] + b[0] , labels + [work_labels[0]], loc = (-.35, .85), title = 'Time of Day')
     plt.legend(b[0] + c[0] , work_labels + labels, bbox_to_anchor = (-.6, -.4, 1.2, .5),
@@ -313,7 +314,7 @@ def Comparison(cities):
 
 Plotting(durham)
 # Plotting('philly')
-GridPlotting([durham, beijing, dubai, sydney])
+GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
 # OneRing(['durham', 'dubai'], 'daylight')
 # Comparison(['durham', 'london'])
