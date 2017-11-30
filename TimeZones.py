@@ -121,18 +121,20 @@ def Plotting(city):
     data = tdiff(AllMarkers(city, True))
     labels = ['day', 'night']
     colors = ['#f4c20d', '#4885ed']
-    offset = -((15*data[2]) + 90)
+    # offset = -((15*data[2]) + 90)
+    offset = 90 + 15*abs(data[2] - data[8])
 
     work_labels = ['office', 'home']
     work_colors = ['#3cba54', '#db3236']
-    work_offset = -((15*data[6]) + 90)
+    # work_offset = -((15*data[6]) + 90)
+    work_offset = 90 + 15*abs(data[6] - data[8])
 
     now_data = [0.1, 24 - 0.1]
     now_labels = ['now', '']
     grey = plt.cm.Greys
     now_colors = [grey(.999), grey(.001)]
-    now_offset = -((15*data[8]) + 90)
-    # now_offset = 270
+    # now_offset = -((15*data[8]) + 90)
+    now_offset = 90
 
     # plotting each level of the pie chart, from outer to inner, overlapping each other.
     a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset, labeldistance=1.05, counterclock=False, radius=1)
@@ -174,20 +176,19 @@ def GridPlotting(cities):
             # colors = ['orange','blue']
             colors = ['#f4c20d', '#4885ed']
             offset = -((15*data[2]) + 90)
+            offset = 90 + 15*abs(data[2] - data[8])
 
             work_labels = ['office', 'home']
-            # work_labels = ['office', '']
-            # work_colors = [plt.cm.Greens(.85), plt.cm.Reds(.70)]
             work_colors = ['#3cba54', '#db3236']
-            # work_colors = ['#3cba54', 'white']
             work_offset = -((15*data[6]) + 90)
+            work_offset = 90 + 15*abs(data[6] - data[8])
 
             now_data = [0.1, 24 - 0.1]
             now_labels = ['now', '']
             grey = plt.cm.Greys
             now_colors = [grey(.999), grey(.001)]
             now_offset = -((15*data[8]) + 90)
-            # now_offset = 90
+            now_offset = 90
 
             ax = plt.subplot(the_grid[j, k], aspect=1)
             a = plt.pie(now_data, labels=now_labels, colors=now_colors, startangle=now_offset,
@@ -312,7 +313,7 @@ def Comparison(cities):
     plt.show()
 
 
-Plotting(durham)
+# Plotting(durham)
 # Plotting('philly')
 GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
