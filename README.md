@@ -20,5 +20,6 @@ Here is a comparison between several cities around the world at a different mome
 
 New cities for comparison can be added by using the Google Maps API, which geocodes a city to XY coordinates, and then the rest of the script adds the city to the graphs. Cities can be compared one-on-one, in a group of four, or by aligning their daytime and/or workday rings.
 
+I [posted](https://redd.it/7g8597) this projected to r/dataisbeautiful to share / get feedback, which will be incorporated into new iterations of this project.
 
 (This project uses a Google Maps API free key. I'm keeping mine private in a separate file, so cloning this repository would require a user to add their own key when using this specific API.)
