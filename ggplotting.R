@@ -80,6 +80,20 @@ ggplot(data = cities, aes(x = band, fill = factor(color))) +
   theme_void() + theme(legend.title = element_text())
 
 
+# slight improvement, needs design and coding overhaul.
+ggplot(data = cities, aes(x = band, fill = factor(color))) +
+  geom_rect(data = cities %>% filter(band == 4 & city == 1), aes(xmin = 4.9, xmax = 5.1, ymin = start, ymax = end), alpha = 1) +
+  geom_rect(data = cities %>% filter(band == 4 & city == 2), aes(xmin = 5.3, xmax = 5.5, ymin = start, ymax = end), alpha = .6) +
+  geom_rect(aes(xmin = 2, xmax = 6, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
+  annotate("text", x = 1, y = 12, label = "City Name", size = 8) +
+  annotate("text", x = 1, y = 0, label = "Other City", size = 7, alpha = .5) +
+  annotate("text", x = 6.5, y = 12, label = 'Now', size = 4) +
+  lims(x = c(0,12), y = c(0,24)) +
+  coord_polar(theta = 'y', start = pi) +
+  scale_fill_manual(name = 'Time of Day', values = daycolors, labels = c('daytime', 'nighttime')) +
+  # scale_fill_manual(name = 'Time of Day', values = daycolors, labels = c('daytime', 'office', 'nighttime', 'home')) +
+  # scale_alpha_continuous(guide = FALSE) +
+  theme_void() + theme(legend.title = element_text())
 
 
 

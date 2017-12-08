@@ -119,6 +119,7 @@ def Plotting(city):
         city = GoogleMaps(city)
 
     data = tdiff(AllMarkers(city, True))
+    print(data)
     labels = ['day', 'night']
     colors = ['#f4c20d', '#4885ed']
     # offset = -((15*data[2]) + 90)
@@ -313,9 +314,9 @@ def Comparison(cities):
     plt.show()
 
 
-# Plotting(durham)
+Plotting(durham)
 # Plotting('philly')
-GridPlotting([nyc, beijing, dubai, sydney])
+# GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
 # OneRing(['durham', 'dubai'], 'daylight')
 # Comparison(['durham', 'london'])
