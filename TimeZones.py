@@ -76,6 +76,10 @@ def AllMarkers(city, display):
                 print(marker_names[i], '\t', '\t', all_markers[i])
             else:
                 print(marker_names[i], '\t', all_markers[i])
+
+    # all_markers2 = pd.DataFrame({'names' : marker_names, 'values' : all_markers})
+    # all_markers2.to_csv('./test_times.csv')
+
     return(all_markers)
 
 def tdiff(times):
@@ -88,6 +92,13 @@ def tdiff(times):
     for t in range(0,len(thyme)):
         thyme[t] = datetime.strptime(str(thyme[t])[:8], '%H:%M:%S')
         thyme[t] = (thyme[t] - datetime.combine(thyme[t], time.min)).total_seconds()/3600
+
+    # testing ggplotting.
+    temp_names = ['sunrise', 'sunset', 'day_length', 'work_start', 'work_end', 'right_now']
+    temp_df = pd.DataFrame({'values': thyme}, index=temp_names)
+    temp_df = temp_df.iloc[(0,1,3,4),:]
+    # temp_df.to_csv('./for_ggplotting.csv')
+
     daytime, nighttime, sunrise, sunset = thyme[2], 24-thyme[2], thyme[0], thyme[1]
     work_time, free_time, work_start, work_end, right_now = 8, 24-8, thyme[3], thyme[4], thyme[5]
     return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end, right_now])
@@ -119,7 +130,6 @@ def Plotting(city):
         city = GoogleMaps(city)
 
     data = tdiff(AllMarkers(city, True))
-    print(data)
     labels = ['day', 'night']
     colors = ['#f4c20d', '#4885ed']
     # offset = -((15*data[2]) + 90)

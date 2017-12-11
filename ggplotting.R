@@ -99,7 +99,33 @@ ggplot(data = cities, aes(x = band, fill = factor(color))) +
 
 
 
-# testing a new way of structuring the data.
+# Testing a new way of structuring the data.
+
+# the format we get is:
+# Sunrise, Sunset, Work_Start, Work_End
+
+# the format we want to end up with is: 
+# City, Symbol, Start, End
+
+# this calls for some reshaping or something.
+
+temp1 = read_csv('for_ggplotting.csv')
+# colnames(temp1) = c('names', 'values')
+temp1
+
+temp2 = data_frame(start = unlist(list(temp1[,2])),
+                   end = unlist(list(temp1[c(2,1,4,3),2])),
+                   city = 1,
+                   symbol = c(1:4))
+
+temp2
+wrap_about(temp2)
+
+
+
+
+
+
 
 test1 = c(1, 1, 6, 18)
 test2 = c(1, 2, 18, 06)
@@ -127,7 +153,7 @@ test = test %>%
          xmin = gen+loc-.25,
          xmax = gen+loc+.25,
          alpha = 1/city,
-         color = colors[symbol]) %>%
+         colorz = colors[symbol]) %>%
   filter(symbol != 4)
 
 
@@ -137,7 +163,7 @@ colors = c('#f4c20d', '#4885ed', '#3cba54', '#db3236')
 
 test
 
-ggplot(data = test, aes(fill = color)) +
+ggplot(data = test, aes(fill = colorz)) +
   # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
   geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
   # geom_rect(aes(xmin = 2, xmax = 10, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
