@@ -109,75 +109,58 @@ ggplot(data = cities, aes(x = band, fill = factor(color))) +
 
 # this calls for some reshaping or something.
 
-temp1 = read_csv('for_ggplotting.csv')
-# colnames(temp1) = c('names', 'values')
-temp1
+pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'values'))
+pydata
 
-temp2 = data_frame(start = unlist(list(temp1[,2])),
-                   end = unlist(list(temp1[c(2,1,4,3),2])),
-                   city = 1,
-                   symbol = c(1:4))
+pydata = pydata %>% mutate(city = rep(1:(nrow(pydata)/4), each = 4)) # labels each city
+pydata
 
-temp2
-wrap_about(temp2)
+dayta = data_frame(city = pydata$city,
+                   symbol = rep(1:4, nrow(pydata)/4),
+                   start = pydata$values)
 
+dayta = dayta %>% mutate(end = ifelse(symbol %in% c(1,3), lead(start), lag(start))) %>% select(3,4,2,1) # rearranges start/end values
 
+dayta
+dayta = wrap_about(dayta)
+dayta
 
+dayta = dayta %>%
+        mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
+               gen = ring*2 + 5,
+               # loc = ifelse(city == 1, -.15, .15),
+               loc = ifelse(city%%2==0, -.15*city, +.15*city),
+               xmin = gen+loc-.1,
+               xmax = gen+loc+.1,
+         # xmin = gen+loc-.25,
+         # xmax = gen+loc+.25,
+               alpha = 1/city,
+               clr = colors[symbol]) %>%
+        filter(symbol != 4)
 
+dayta
 
+# naming the colors as themselves, then arranging labels as needed, apparently works? not sure why, just got it by playing around.
+colors = c('#f4c20d' = '#f4c20d', '#4885ed' = '#4885ed', '#3cba54' = '#3cba54', '#db3236' = '#db3236')
 
+dayta
 
-test1 = c(1, 1, 6, 18)
-test2 = c(1, 2, 18, 06)
-test3 = c(1, 3, 10, 18)
-test4 = c(1, 4, 18, 10)
-test5 = c(2, 1, 8, 12)
-test6 = c(2, 2, 12, 8)
-test7 = c(2, 3, 3, 15)
-test8 = c(2, 4, 15, 3)
-
-test = data.frame(rbind(test1, test2, test3, test4, test5, test6, test7, test8))
-names(test) = c('city', 'symbol', 'start', 'end')
-test = test[,c(3,4,2,1)]
-str(test)
-
-test = wrap_about(test)
-
-test = test %>%
-  mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
-         gen = ring + 5,
-         # loc = ifelse(city == 1, -.15, .15),
-         loc = 0,
-         # xmin = gen+loc-.1,
-         # xmax = gen+loc+.1,
-         xmin = gen+loc-.25,
-         xmax = gen+loc+.25,
-         alpha = 1/city,
-         colorz = colors[symbol]) %>%
-  filter(symbol != 4)
-
-
-
-# colors = c('#f4c20d', '#3cba54', '#4885ed', '#db3236')
-colors = c('#f4c20d', '#4885ed', '#3cba54', '#db3236')
-
-test
-
-ggplot(data = test, aes(fill = colorz)) +
-  # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
-  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
+ggplot(data = dayta, aes(fill = clr)) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
+  # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
   # geom_rect(aes(xmin = 2, xmax = 10, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
   # annotate("text", x = 10.5, y = 12, label = 'Now', size = 4) +
   # annotate("text", x = 1, y = 12, label = "City Name", size = 8) +
   # annotate("text", x = 1, y = 0, label = "Other City", size = 7, alpha = .5) +
   lims(x = c(0,12), y = c(0,24)) +
   coord_polar(theta = 'y', start = pi) +
-  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'office', 'home')) +
+  scale_fill_manual(name = 'Time of Day', values = colors, labels = c('home', 'night', 'day')) +
+  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'work', 'home')) +
   # scale_alpha_continuous(guide = FALSE) +
   # theme_void() + theme(legend.title = element_text()) +
   theme_minimal()
 
-test
+dayta
 
 
 
