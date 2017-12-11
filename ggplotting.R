@@ -1,4 +1,4 @@
-# setwd('~/Desktop/Real Life/Coding Projects/TimeZones/')
+setwd('~/Desktop/Real Life/Coding Projects/TimeZones/')
 library(tidyverse)
 
 wrap = data.frame(start = c(5, 18, 9, 16),
@@ -18,7 +18,7 @@ wrap_about = function(times){
       times = rbind(times, new_row1, new_row2)
     }
   }
-  times = times %>% filter(start <= end) %>% arrange(band, -start)
+  times = times %>% filter(start <= end) %>% arrange(symbol, -start)
   return(times)
 }
 
@@ -46,7 +46,6 @@ ggplot(data = actual_set2, aes(x = band, fill = factor(color))) +
   coord_polar(theta = 'y', start = pi) +
   scale_fill_manual(name = 'Time of Day', values = colors, labels = c('daytime', 'office', 'nighttime', 'home')) +
   theme_void() + theme(legend.title = element_text())
-
 
 
 # testing with two different (made up) cities.
@@ -95,6 +94,59 @@ ggplot(data = cities, aes(x = band, fill = factor(color))) +
   # scale_alpha_continuous(guide = FALSE) +
   theme_void() + theme(legend.title = element_text())
 
+
+
+
+
+
+# testing a new way of structuring the data.
+
+test1 = c(1, 1, 6, 18)
+test2 = c(1, 2, 18, 06)
+test3 = c(1, 3, 10, 18)
+test4 = c(1, 4, 18, 10)
+test5 = c(2, 1, 8, 12)
+test6 = c(2, 2, 12, 8)
+test7 = c(2, 3, 3, 15)
+test8 = c(2, 4, 15, 3)
+
+test = data.frame(rbind(test1, test2, test3, test4, test5, test6, test7, test8))
+names(test) = c('city', 'symbol', 'start', 'end')
+test = test[,c(3,4,2,1)]
+str(test)
+
+test = wrap_about(test)
+
+test = test %>%
+  mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
+         gen = ring + 5,
+         loc = ifelse(city == 1, -.15, .15),
+         xmin = gen+loc-.1,
+         xmax = gen+loc+.1,
+         alpha = 1/city,
+         color = colors[symbol])
+
+
+
+# colors = c('#f4c20d', '#3cba54', '#4885ed', '#db3236')
+colors = c('#f4c20d', '#4885ed', '#3cba54', '#db3236')
+
+test
+
+ggplot(data = test, aes(fill = color)) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
+  # geom_rect(aes(xmin = 2, xmax = 10, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
+  # annotate("text", x = 10.5, y = 12, label = 'Now', size = 4) +
+  # annotate("text", x = 1, y = 12, label = "City Name", size = 8) +
+  # annotate("text", x = 1, y = 0, label = "Other City", size = 7, alpha = .5) +
+  lims(x = c(0,12), y = c(0,24)) +
+  coord_polar(theta = 'y', start = pi) +
+  scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'office', 'home')) +
+  # scale_alpha_continuous(guide = FALSE) +
+  # theme_void() + theme(legend.title = element_text()) +
+  theme_minimal()
+
+test
 
 
 
