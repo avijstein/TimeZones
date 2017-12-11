@@ -120,11 +120,15 @@ test = wrap_about(test)
 test = test %>%
   mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
          gen = ring + 5,
-         loc = ifelse(city == 1, -.15, .15),
-         xmin = gen+loc-.1,
-         xmax = gen+loc+.1,
+         # loc = ifelse(city == 1, -.15, .15),
+         loc = 0,
+         # xmin = gen+loc-.1,
+         # xmax = gen+loc+.1,
+         xmin = gen+loc-.25,
+         xmax = gen+loc+.25,
          alpha = 1/city,
-         color = colors[symbol])
+         color = colors[symbol]) %>%
+  filter(symbol != 4)
 
 
 
@@ -134,14 +138,15 @@ colors = c('#f4c20d', '#4885ed', '#3cba54', '#db3236')
 test
 
 ggplot(data = test, aes(fill = color)) +
-  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
+  # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = 1) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
   # geom_rect(aes(xmin = 2, xmax = 10, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
   # annotate("text", x = 10.5, y = 12, label = 'Now', size = 4) +
   # annotate("text", x = 1, y = 12, label = "City Name", size = 8) +
   # annotate("text", x = 1, y = 0, label = "Other City", size = 7, alpha = .5) +
   lims(x = c(0,12), y = c(0,24)) +
   coord_polar(theta = 'y', start = pi) +
-  scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'office', 'home')) +
+  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'office', 'home')) +
   # scale_alpha_continuous(guide = FALSE) +
   # theme_void() + theme(legend.title = element_text()) +
   theme_minimal()
