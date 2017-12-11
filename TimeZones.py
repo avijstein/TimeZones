@@ -97,7 +97,8 @@ def tdiff(times):
     temp_names = ['sunrise', 'sunset', 'day_length', 'work_start', 'work_end', 'right_now']
     temp_df = pd.DataFrame({'values': thyme}, index=temp_names)
     temp_df = temp_df.iloc[(0,1,3,4),:]
-    # temp_df.to_csv('./for_ggplotting.csv')
+    with open('for_ggplotting.csv', 'a') as f:
+        temp_df.to_csv(f, header=False)
 
     daytime, nighttime, sunrise, sunset = thyme[2], 24-thyme[2], thyme[0], thyme[1]
     work_time, free_time, work_start, work_end, right_now = 8, 24-8, thyme[3], thyme[4], thyme[5]
