@@ -326,6 +326,9 @@ def Comparison(cities):
 
 
 Plotting(durham)
+# Plotting(nyc)
+# Plotting(beijing)
+# Plotting(dubai)
 # Plotting('philly')
 # GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
