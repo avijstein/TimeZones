@@ -93,13 +93,6 @@ def tdiff(times):
         thyme[t] = datetime.strptime(str(thyme[t])[:8], '%H:%M:%S')
         thyme[t] = (thyme[t] - datetime.combine(thyme[t], time.min)).total_seconds()/3600
 
-    # testing ggplotting.
-    temp_names = ['sunrise', 'sunset', 'day_length', 'work_start', 'work_end', 'right_now']
-    temp_df = pd.DataFrame({'values': thyme}, index=temp_names)
-    temp_df = temp_df.iloc[(0,1,3,4),:]
-    with open('for_ggplotting.csv', 'a') as f:
-        temp_df.to_csv(f, header=False)
-
     daytime, nighttime, sunrise, sunset = thyme[2], 24-thyme[2], thyme[0], thyme[1]
     work_time, free_time, work_start, work_end, right_now = 8, 24-8, thyme[3], thyme[4], thyme[5]
     return([daytime, nighttime, sunrise, sunset, work_time, free_time, work_start, work_end, right_now])
@@ -324,11 +317,31 @@ def Comparison(cities):
     # plt.subplots_adjust(left=.04, bottom=.04, right=.98, top=.88, wspace=.35, hspace=.17)
     plt.show()
 
+def forR(city1, city2):
+    """
+    This function is a modified version of tdiff, but takes two cities for comparison,
+    and writes them to a file for R.
+    """
+    cities = [city1, city2]
+    for i in range(0, len(cities)):
+        times = AllMarkers(cities[i], True)
 
-Plotting(durham)
-# Plotting(nyc)
-# Plotting(beijing)
-# Plotting(dubai)
+        thyme = [times[0], times[2], times[3], times[4], times[6], times[7]]
+        for t in range(0,len(thyme)):
+            thyme[t] = datetime.strptime(str(thyme[t])[:8], '%H:%M:%S')
+            thyme[t] = (thyme[t] - datetime.combine(thyme[t], time.min)).total_seconds()/3600
+
+        # testing ggplotting.
+        temp_names = ['sunrise', 'sunset', 'day_length', 'work_start', 'work_end', 'right_now']
+        temp_df = pd.DataFrame({'city': cities[i][2], 'values': thyme}, index=temp_names)
+        temp_df = temp_df.iloc[(0,1,3,4),:]
+        with open('for_ggplotting.csv', 'a') as f:
+            temp_df.to_csv(f, header=False)
+
+
+forR(durham, dubai)
+
+# Plotting(durham)
 # Plotting('philly')
 # GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])

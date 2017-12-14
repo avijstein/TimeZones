@@ -29,8 +29,10 @@ wrap_about = function(times){
 
 # this calls for some reshaping or something.
 
-pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'values'))
+pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'city', 'values'))
 pydata
+
+# pydata %>% mutate(city2 = as.numeric(as.factor(city))) # converting city names to numeric values
 
 pydata = pydata %>% mutate(city = rep(1:(nrow(pydata)/4), each = 4)) # labels each city
 pydata
