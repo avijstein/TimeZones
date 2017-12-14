@@ -324,6 +324,8 @@ def forR(city1, city2):
     """
     cities = [city1, city2]
     for i in range(0, len(cities)):
+        if type(cities[i]) == str:
+            cities[i] = GoogleMaps(cities[i])
         times = AllMarkers(cities[i], True)
 
         thyme = [times[0], times[2], times[3], times[4], times[6], times[7]]
@@ -339,7 +341,7 @@ def forR(city1, city2):
             temp_df.to_csv(f, header=False)
 
 
-forR(durham, dubai)
+forR(durham, 'london')
 
 # Plotting(durham)
 # Plotting('philly')

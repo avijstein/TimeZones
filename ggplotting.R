@@ -29,13 +29,14 @@ wrap_about = function(times){
 
 # this calls for some reshaping or something.
 
+# It might be best to only limit the incoming data to two cities.
 pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'city', 'values'))
 pydata
 
-# pydata %>% mutate(city2 = as.numeric(as.factor(city))) # converting city names to numeric values
-
-pydata = pydata %>% mutate(city = rep(1:(nrow(pydata)/4), each = 4)) # labels each city
+pydata = pydata %>% mutate(city = as.numeric(as.factor(city))) # converting city names to numeric values
 pydata
+
+# pydata = pydata %>% mutate(city = rep(1:(nrow(pydata)/4), each = 4)) # labels each city (can handle n-cities)
 
 dayta = data_frame(city = pydata$city,
                    symbol = rep(1:4, nrow(pydata)/4),
