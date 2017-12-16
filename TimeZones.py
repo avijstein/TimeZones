@@ -341,7 +341,7 @@ def forR(city1, city2):
             temp_df.to_csv(f, header=False)
 
 
-forR(durham, 'london')
+forR(durham, 'durham, england')
 
 # Plotting(durham)
 # Plotting('philly')
@@ -351,7 +351,7 @@ forR(durham, 'london')
 # Comparison(['durham', 'london'])
 
 
-
+# TODO: Modify forR funciton so it writes overwrites the entire file every time the function runs.
 
 
 
