@@ -2,7 +2,7 @@ sunrise,Durham,12.33
 sunset,Durham,22.054166666666667
 work_start,Durham,14.259722222222223
 work_end,Durham,22.259722222222223
-sunrise,"durham, england",8.416944444444445
-sunset,"durham, england",15.659166666666666
-work_start,"durham, england",9.105555555555556
-work_end,"durham, england",17.105555555555554
+sunrise,london,8.015277777777778
+sunset,london,15.866111111111111
+work_start,london,9.008333333333333
+work_end,london,17.008333333333333

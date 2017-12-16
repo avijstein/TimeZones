@@ -322,6 +322,8 @@ def forR(city1, city2):
     This function is a modified version of tdiff, but takes two cities for comparison,
     and writes them to a file for R.
     """
+    f = open('for_ggplotting.csv', 'w')
+    f.close()
     cities = [city1, city2]
     for i in range(0, len(cities)):
         if type(cities[i]) == str:
@@ -341,7 +343,7 @@ def forR(city1, city2):
             temp_df.to_csv(f, header=False)
 
 
-forR(durham, 'durham, england')
+forR(durham, 'london')
 
 # Plotting(durham)
 # Plotting('philly')
@@ -349,11 +351,6 @@ forR(durham, 'durham, england')
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])
 # OneRing(['durham', 'dubai'], 'daylight')
 # Comparison(['durham', 'london'])
-
-
-# TODO: Modify forR funciton so it writes overwrites the entire file every time the function runs.
-
-
 
 
 
