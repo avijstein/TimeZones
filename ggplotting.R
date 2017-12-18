@@ -48,54 +48,41 @@ dayta
 dayta = wrap_about(dayta)
 dayta
 
+new_pal = data.frame('names' = c('yellowDark', 'yellowLight', 'blueDark', 'blueLight', 'greenDark', 'greenLight'),
+                     'symbol' = rep(1:3, each = 2),
+                     'city' = rep(1:2),
+                     'hex_codes' = c('#C39B0A', '#F6CE3D', '#396ABD', '#6C9DF0', '#309443', '#62C776'),
+                     stringsAsFactors = F)
+new_pal = new_pal[c(6,4,5,3:1),]
+
 dayta = dayta %>%
-        mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
-               gen = ifelse(ring == 1, 5, 5.9),
-               # gen = ring*1.25 + 5,
-               # loc = ifelse(city == 1, -.15, .15),
-               loc = ifelse(city%%2==0, -.15*city, +.15*city),
-               # xmin = gen+loc-.1,
-               # xmax = gen+loc+.1,
-               xmin = gen+loc-.23,
-               xmax = gen+loc+.23,
-               # xmin = ifelse(ring == 1, gen+loc-.23, gen+loc),
-               # xmax = ifelse(ring == 1, gen+loc+.23, gen+loc),
-               # alpha = 1/city,
-               beta = ifelse(ring == 1, 1, 1),
-               clr = colors[symbol]) %>%
-        filter(symbol != 4)
+  filter(symbol != 4) %>%
+  mutate(ring = ifelse(symbol %in% c(1,2), 1, 2),
+                         gen = ifelse(ring == 1, 5, 6),
+                         loc = ifelse(city == 1, -.25, +.25),
+                         xmin = gen+loc-.25,
+                         xmax = gen+loc+.25)
 
-dayta
+dayta = dayta %>% left_join(y = new_pal, by = c('symbol', 'city'))
 
-# naming the colors as themselves, then arranging labels as needed, apparently works? not sure why, just got it by playing around.
-colors = c('#f4c20d' = '#f4c20d', '#4885ed' = '#4885ed', '#3cba54' = '#3cba54', '#db3236' = '#db3236')
 
-dayta
-
-ggplot(data = dayta, aes(fill = clr)) +
-  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), color = 'grey', alpha = 1) +
+ggplot(data = dayta, aes(fill = hex_codes)) +
+  geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end, fill = hex_codes), color = 'grey') +
   # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
-  geom_rect(aes(xmin = 2, xmax = 10, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
-  annotate("text", x = 10.5, y = 12, label = 'Now', size = 4) +
-  annotate("text", x = 1, y = 12, label = "City Name", size = 8) +
-  annotate("text", x = 1, y = 0, label = "Other City", size = 7, alpha = .5) +
+  geom_rect(aes(xmin = 3, xmax = 8, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
+  annotate("text", x = 8.5, y = 12, label = 'Now', size = 4) +
+  annotate("text", x = 1, y = 12, label = "City 1", size = 8) +
+  annotate("text", x = 1, y = 0, label = "City 2", size = 8, alpha = .5) +
   lims(x = c(0,12), y = c(0,24)) +
   coord_polar(theta = 'y', start = pi) +
-  scale_fill_manual(name = 'Time of Day', values = colors, labels = c('office', 'night', 'day')) +
-  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('day', 'night', 'work', 'home')) +
-  # scale_alpha_continuous(guide = FALSE) +
+  scale_fill_manual(name = 'Time of Day', values = new_pal$hex_codes, labels = new_pal$names) +
+  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('office', 'night', 'day')) +
   theme_void() + theme(legend.title = element_text())
-  # theme_minimal()
 
 dayta
 
 
 
-# TODO: DESIGN
-# two levels of color (pick a light and dark pair for each of the colors)
-# assign color pairs to each of the rings.
-# make the two city the same size and space them out appropriately. 
-
-
-
+# TODO:
+# Pick better colors.
 
