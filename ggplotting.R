@@ -33,6 +33,8 @@ wrap_about = function(times){
 pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'city', 'values'))
 pydata
 
+city_name = unique(pydata$city)
+
 pydata = pydata %>% mutate(city = as.numeric(as.factor(city))) # converting city names to numeric values
 pydata
 
@@ -68,15 +70,13 @@ dayta = dayta %>% left_join(y = new_pal, by = c('symbol', 'city'))
 
 ggplot(data = dayta, aes(fill = hex_codes)) +
   geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end, fill = hex_codes), color = 'grey') +
-  # geom_rect(aes(xmin = xmin, xmax = xmax, ymin = start, ymax = end), alpha = .65) +
   geom_rect(aes(xmin = 3, xmax = 8, ymin = 11.95, ymax = 12.05), fill = '#808080', alpha = 1) +
   annotate("text", x = 8.5, y = 12, label = 'Now', size = 4) +
-  annotate("text", x = 1, y = 12, label = "City 1", size = 8) +
-  annotate("text", x = 1, y = 0, label = "City 2", size = 8, alpha = .5) +
+  annotate("text", x = 1, y = 12, label = city_name[1], size = 8) +
+  annotate("text", x = 1, y = 0, label = city_name[2], size = 8, alpha = .5) +
   lims(x = c(0,12), y = c(0,24)) +
   coord_polar(theta = 'y', start = pi) +
   scale_fill_manual(name = 'Time of Day', values = new_pal$hex_codes, labels = new_pal$names) +
-  # scale_fill_manual(name = 'Time of Day', values = colors, labels = c('office', 'night', 'day')) +
   theme_void() + theme(legend.title = element_text())
 
 dayta
