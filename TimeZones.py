@@ -343,9 +343,9 @@ def forR(city1, city2):
             temp_df.to_csv(f, header=False)
 
 
-forR(durham, 'london')
+# forR(durham, 'london')
 
-# Plotting(durham)
+# Plotting(nyc)
 # Plotting('philly')
 # GridPlotting([nyc, beijing, dubai, sydney])
 # GridPlotting(['durham', 'beijing', 'dubai', 'sydney'])

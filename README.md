@@ -11,12 +11,12 @@ The basis of this project stems from the idea that time is just a social constru
 
 My first objective has been to build a comparison between different cities, so we can see their differences. I've visualized each city as a pie plot, with important day markers as its rings. For example, here is NYC as I'm writing this.
 
-![NYC](https://github.com/avijstein/TimeZones/blob/master/Ring%20Examples/nyc_sample.png)
+![NYC](https://github.com/avijstein/TimeZones/blob/master/Ring%20Examples/nyc.png)
 
 
 Here is a comparison between several cities around the world at a different moment in time.
 
-![Various Cities](https://github.com/avijstein/TimeZones/blob/master/Ring%20Examples/sample_cities.png)
+![Various Cities](https://github.com/avijstein/TimeZones/blob/master/Ring%20Examples/cities.png)
 
 New cities for comparison can be added by using the Google Maps API, which geocodes a city to XY coordinates, and then the rest of the script adds the city to the graphs. Cities can be compared one-on-one, in a group of four, or by aligning their daytime and/or workday rings.
 
