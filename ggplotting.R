@@ -18,17 +18,6 @@ wrap_about = function(times){
   return(times)
 }
 
-
-# Testing a new way of structuring the data.
-
-# the format we get is:
-# Sunrise, Sunset, Work_Start, Work_End
-
-# the format we want to end up with is: 
-# City, Symbol, Start, End
-
-# this calls for some reshaping or something.
-
 # It might be best to only limit the incoming data to two cities.
 pydata = read_csv('for_ggplotting.csv', col_names = c('names', 'city', 'values'))
 pydata
@@ -50,7 +39,7 @@ dayta
 dayta = wrap_about(dayta)
 dayta
 
-new_pal = data.frame('names' = c('yellowDark', 'yellowLight', 'blueDark', 'blueLight', 'greenDark', 'greenLight'),
+new_pal = data.frame('names' = c('Day1', 'Day2', 'Night1', 'Night2', 'Office1', 'Office2'),
                      'symbol' = rep(1:3, each = 2),
                      'city' = rep(1:2),
                      'hex_codes' = c('#C39B0A', '#F6CE3D', '#396ABD', '#6C9DF0', '#309443', '#62C776'),
@@ -78,11 +67,4 @@ ggplot(data = dayta, aes(fill = hex_codes)) +
   coord_polar(theta = 'y', start = pi) +
   scale_fill_manual(name = 'Time of Day', values = new_pal$hex_codes, labels = new_pal$names) +
   theme_void() + theme(legend.title = element_text())
-
-dayta
-
-
-
-# TODO:
-# Pick better colors.
 

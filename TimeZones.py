@@ -343,7 +343,7 @@ def forR(city1, city2):
             temp_df.to_csv(f, header=False)
 
 
-# forR(durham, 'london')
+# forR(nyc, 'London')
 
 # Plotting(nyc)
 # Plotting('philly')
