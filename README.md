@@ -22,7 +22,7 @@ New cities for comparison can be added by using the Google Maps API, which geoco
 
 I [posted](https://redd.it/7g8597) this projected to r/dataisbeautiful to share / get feedback, which will be incorporated into new iterations of this project.
 
-Because of the differing strengths and weaknesses of how Python's matplotlib and R's ggplot2 work, I tried recreating these graphs in R. I also tried to incorporate some feedback from Reddit, including thinner lines and minimalist color schemes. I don't know how well I succeeded. Some issues (e.g., transparency) were a breeze, but some (e.g., color picking and labeling) were a headache. Here is a sample of one of the graphs in R.
+Because of the differing strengths and weaknesses of how Python's matplotlib and R's ggplot2 work, I tried recreating these graphs in R. I also tried to incorporate some feedback from Reddit, including thinner lines and minimalist color schemes. I don't know how well I succeeded. Some issues (e.g., transparency) were a breeze, but some (e.g., color picking and labeling) were a headache. Here is a sample of one of the graphs in R:
 
 ![ggplotting](/Ring%20Examples/ggplotting.png)
 
